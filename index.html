@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>2D Generator</title>
+  <style>
+    body{font-family:Arial, sans-serif;margin:24px;background:#fafafa;color:#111}
+    .card{background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.06);padding:18px;max-width:900px;margin:auto}
+    h1{margin:0 0 6px;font-size:20px}
+    .meta{color:#666;margin-bottom:12px}
+    .numbers{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+    .num{padding:8px 10px;border-radius:8px;background:#f2f2f2;font-weight:600}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    button{padding:8px 12px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}
+    button.secondary{background:#666}
+    .small{font-size:13px;color:#444;margin-left:auto}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>2D Generator</h1>
+    <div class="meta">Pools: <span id="pool"></span> — Tanggal: <span id="tanggal"></span></div>
+
+    <div>
+      <strong>WEB 1:</strong>
+      <div class="numbers" id="numbers"></div>
+    </div>
+
+    <div class="controls">
+      <button id="copyBtn">Copy WEB 1</button>
+      <button id="shuffleBtn" class="secondary">Shuffle WEB 1</button>
+      <div class="small" id="count">Jumlah angka: 0</div>
+    </div>
+
+    <div style="margin-top:14px">DEPO: <strong id="depo"></strong></div>
+  </div>
+
+  <script>
+    let data = {
+      tanggal: "2025-10-01",
+      pool: "HONGKONG 2D DEPAN",
+      numbers: ["40","10","25","92","49","29","04","16","90","26","69","94","06","19","02","60","95","15","35","09","42","05","12","14","65","32","91","62","41","01","36","46","31","24","64","34","21","20","30","61"],
+      depo: "800000"
+    };
+
+    const elNumbers = document.getElementById('numbers');
+    const elCount = document.getElementById('count');
+    const elTanggal = document.getElementById('tanggal');
+    const elPool = document.getElementById('pool');
+    const elDepo = document.getElementById('depo');
+
+    function render(){
+      elNumbers.innerHTML = '';
+      data.numbers.forEach(n=>{
+        const d = document.createElement('div');
+        d.className = 'num';
+        d.textContent = n;
+        elNumbers.appendChild(d);
+      });
+      elCount.textContent = 'Jumlah angka: ' + data.numbers.length;
+      elTanggal.textContent = data.tanggal;
+      elPool.textContent = data.pool;
+      elDepo.textContent = data.depo;
+    }
+
+    function shuffleArray(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    async function copyToClipboard(text){
+      if(navigator.clipboard){
+        await navigator.clipboard.writeText(text);
+        alert("Copied!");
+      } else {
+        alert("Clipboard API tidak didukung browser ini.");
+      }
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', ()=>{
+      copyToClipboard(data.numbers.join(' '));
+    });
+
+    document.getElementById('shuffleBtn').addEventListener('click', ()=>{
+      data.numbers = shuffleArray(data.numbers);
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
